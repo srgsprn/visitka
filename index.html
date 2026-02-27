@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Алексей Волков — Фотограф</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    :root {
+      --bg-dark: #0d0d12;
+      --bg-card: rgba(28, 26, 38, 0.6);
+      --purple: #8b5cf6;
+      --purple-light: #a78bfa;
+      --purple-glow: rgba(139, 92, 246, 0.25);
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes softGlow {
+      0%, 100% { box-shadow: 0 0 30px var(--purple-glow); }
+      50% { box-shadow: 0 0 50px rgba(139, 92, 246, 0.4); }
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0d0d12 0%, #1a1625 35%, #15121f 70%, #0d0d12 100%);
+      background-size: 200% 200%;
+      min-height: 100vh;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 4rem 0 3rem;
+    }
+
+    .hero-photo {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1.5rem;
+      border: 3px solid rgba(139, 92, 246, 0.5);
+      box-shadow: 0 0 30px var(--purple-glow);
+      animation: fadeInUp 0.8s ease-out, softGlow 3s ease-in-out infinite;
+      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+
+    .hero-photo:hover {
+      transform: scale(1.06);
+      border-color: var(--purple-light);
+      box-shadow: 0 0 45px rgba(139, 92, 246, 0.5);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(90deg, var(--text), var(--purple-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeInUp 0.8s ease-out 0.1s both;
+      transition: filter 0.3s ease;
+    }
+
+    .hero h1:hover {
+      filter: brightness(1.15);
+    }
+
+    .hero .title {
+      font-size: 1.1rem;
+      color: var(--purple);
+      font-weight: 500;
+      margin-bottom: 1rem;
+      animation: fadeInUp 0.8s ease-out 0.2s both;
+      transition: color 0.3s ease, letter-spacing 0.3s ease;
+    }
+
+    .hero .title:hover {
+      color: var(--purple-light);
+      letter-spacing: 0.05em;
+    }
+
+    .hero .description {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+      animation: fadeInUp 0.8s ease-out 0.3s both;
+      transition: color 0.3s ease;
+    }
+
+    .hero .description:hover {
+      color: var(--text);
+    }
+
+    .hero-cta {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 0.85rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 999px;
+      background: linear-gradient(120deg, #7c3aed 0%, #8b5cf6 25%, #a78bfa 50%, #8b5cf6 75%, #7c3aed 100%);
+      background-size: 200% 200%;
+      animation: fadeInUp 0.8s ease-out 0.4s both, gradientShift 4s ease infinite;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+      box-shadow: 0 4px 24px rgba(139, 92, 246, 0.4);
+    }
+
+    .hero-cta:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 40px rgba(139, 92, 246, 0.6);
+      filter: brightness(1.1);
+    }
+
+    .hero-cta:active {
+      transform: scale(1.02);
+    }
+
+    /* About */
+    .section {
+      margin-bottom: 3rem;
+      animation: fadeInUp 0.7s ease-out both;
+    }
+
+    .section:nth-of-type(1) { animation-delay: 0.1s; }
+    .section:nth-of-type(2) { animation-delay: 0.2s; }
+
+    .section h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--purple-light);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+      transition: color 0.3s ease, border-color 0.3s ease, padding-left 0.3s ease;
+    }
+
+    .section h2:hover {
+      color: #c4b5fd;
+      border-color: rgba(139, 92, 246, 0.6);
+      padding-left: 0.5rem;
+    }
+
+    .section p {
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      transition: color 0.3s ease, padding-left 0.25s ease;
+    }
+
+    .section p:hover {
+      color: var(--text);
+      padding-left: 0.25rem;
+    }
+
+    .section p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Contacts */
+    #contacts {
+      scroll-margin-top: 2rem;
+    }
+
+    .contacts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .contacts a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--purple-light);
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.5rem 1rem;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 8px;
+      transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease, color 0.3s ease;
+    }
+
+    .contacts a:hover {
+      background: var(--purple-glow);
+      box-shadow: 0 0 24px var(--purple-glow);
+      transform: translateY(-2px);
+      color: #c4b5fd;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 0 1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .hero {
+        padding: 2.5rem 0 2rem;
+      }
+
+      .hero-photo {
+        width: 130px;
+        height: 130px;
+        margin-bottom: 1.25rem;
+      }
+
+      .contacts {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .contacts a {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <img class="hero-photo" src="portrait.jpg" alt="Алексей Волков" width="160" height="160">
+      <h1>Алексей Волков</h1>
+      <p class="title">Фотограф и ретушёр</p>
+      <p class="description">Снимаю портреты, репортажи и коммерческие проекты. Работаю в Москве и выезжаю в другие города.</p>
+      <a class="hero-cta" href="#contacts">Связаться со мной</a>
+    </section>
+
+    <section class="section">
+      <h2>О себе</h2>
+      <p>
+        Занимаюсь фотографией больше восьми лет: портретная съёмка, корпоративные мероприятия, свадьбы и репортажи. Работаю в студии и на выезде, в обработке делаю акцент на естественную цветопередачу и аккуратную ретушь. Постоянно учусь у коллег и на практике — для меня важно, чтобы кадр не только был технически верным, но и передавал настроение и историю человека.
+      </p>
+      <p>
+        В свободное время снимаю для себя: путешествия, улица, природа. Люблю пешие походы и велопрогулки — часто совмещаю их с съёмкой. Считаю, что личные проекты помогают сохранять свежий взгляд и не выгорать на коммерческих заказах.
+      </p>
+      <p>
+        Готов к съёмкам под ключ: от идеи и локации до финальной ретуши и печати. Если нужны портреты для карточек, репортаж с мероприятия или персональная съёмка — напишите на почту или в мессенджер, обсудим задачу и сроки.
+      </p>
+    </section>
+
+    <section id="contacts" class="section">
+      <h2>Контакты</h2>
+      <div class="contacts">
+        <a href="mailto:alexey.volkov@email.com">✉ alexey.volkov@email.com</a>
+        <a href="https://t.me/alexey_volkov" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://github.com/alexeyvolkov" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://linkedin.com/in/alexeyvolkov" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </section>
+
+    <footer>© 2026</footer>
+  </div>
+</body>
+</html>
