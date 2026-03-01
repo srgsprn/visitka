@@ -299,5 +299,111 @@
 
     <footer>© 2026</footer>
   </div>
+
+  <!-- AI-чатбот: https://github.com/evgyur/cursor-ai-chatbot -->
+  <script>
+    window.aiChatConfig = {
+      consultantName: "Джонни Синс",
+      welcomeMessage: "Привет! Я Джонни Синс — фитнес-тренер и мотивационный спикер. Могу рассказать об услугах, ценах и как со мной связаться. О чём спросите?",
+      apiUrl: "/api/chat",
+      primaryColor: "#8b5cf6",
+      chatTitle: "Чат с Джонни"
+    };
+  </script>
+  <style>
+    #ai-chat-widget { position: fixed; bottom: 20px; right: 20px; z-index: 999999; font-family: system-ui, sans-serif; }
+    #ai-chat-toggle { width: 60px; height: 60px; border-radius: 50%; background: var(--ai-chat-color, #8b5cf6); border: none; cursor: pointer; box-shadow: 0 4px 20px rgba(139,92,246,0.4); display: flex; align-items: center; justify-content: center; transition: transform 0.2s; }
+    #ai-chat-toggle:hover { transform: scale(1.05); }
+    #ai-chat-toggle svg { width: 28px; height: 28px; fill: white; }
+    #ai-chat-window { position: absolute; bottom: 80px; right: 0; width: 380px; max-width: calc(100vw - 40px); height: 500px; background: #1a1625; border-radius: 16px; box-shadow: 0 8px 40px rgba(0,0,0,0.4); border: 1px solid rgba(139,92,246,0.3); display: none; flex-direction: column; overflow: hidden; }
+    #ai-chat-window.open { display: flex; }
+    .ai-chat-header { background: var(--ai-chat-color, #8b5cf6); color: white; padding: 16px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .ai-chat-close { background: none; border: none; color: white; cursor: pointer; font-size: 20px; }
+    .ai-chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .ai-message { max-width: 85%; padding: 12px 16px; border-radius: 16px; font-size: 14px; line-height: 1.5; }
+    .ai-message.user { background: #8b5cf6; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .ai-message.assistant { background: rgba(139,92,246,0.2); color: #e2e8f0; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid rgba(139,92,246,0.3); }
+    .ai-message.error { background: rgba(220,38,38,0.2); color: #fca5a5; font-size: 12px; }
+    .ai-chat-input { padding: 16px; border-top: 1px solid rgba(139,92,246,0.3); display: flex; gap: 8px; }
+    .ai-chat-input input { flex: 1; padding: 12px 16px; border: 1px solid rgba(139,92,246,0.4); border-radius: 24px; outline: none; font-size: 14px; background: #0d0d12; color: #e2e8f0; }
+    .ai-chat-input input:focus { border-color: #8b5cf6; }
+    .ai-chat-input button { width: 44px; height: 44px; border-radius: 50%; background: #8b5cf6; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .ai-chat-input button:disabled { background: #64748b; cursor: not-allowed; }
+    .ai-chat-input button svg { width: 20px; height: 20px; fill: white; }
+    .ai-typing { display: flex; gap: 4px; padding: 12px 16px; background: rgba(139,92,246,0.2); border-radius: 16px; border-bottom-left-radius: 4px; width: fit-content; }
+    .ai-typing span { width: 8px; height: 8px; background: #a78bfa; border-radius: 50%; animation: ai-typing 1.4s infinite; }
+    .ai-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes ai-typing { 0%,60%,100% { transform: translateY(0); } 30% { transform: translateY(-8px); } }
+  </style>
+  <div id="ai-chat-widget">
+    <button type="button" id="ai-chat-toggle" aria-label="Открыть чат" onclick="toggleChat()">
+      <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+    </button>
+    <div id="ai-chat-window">
+      <div class="ai-chat-header">
+        <span id="chat-title">Чат с Джонни</span>
+        <button type="button" class="ai-chat-close" onclick="closeChat()">×</button>
+      </div>
+      <div class="ai-chat-messages" id="chat-messages"></div>
+      <div class="ai-chat-input">
+        <input type="text" id="user-message" placeholder="Напишите сообщение..." onkeypress="handleKeyPress(event)">
+        <button type="button" id="send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function() {
+      var c = window.aiChatConfig || {};
+      if (c.chatTitle) document.getElementById('chat-title').textContent = c.chatTitle;
+      if (c.primaryColor) document.getElementById('ai-chat-toggle').style.background = c.primaryColor;
+      window.toggleChat = function() {
+        var w = document.getElementById('ai-chat-window');
+        w.classList.toggle('open');
+        if (w.classList.contains('open') && document.getElementById('chat-messages').children.length === 0)
+          addMessage(c.welcomeMessage || 'Здравствуйте! Чем могу помочь?', 'assistant');
+      };
+      window.closeChat = function() { document.getElementById('ai-chat-window').classList.remove('open'); };
+      window.handleKeyPress = function(e) { if (e.key === 'Enter') sendMessage(); };
+      window.sendMessage = async function() {
+        var input = document.getElementById('user-message'), msg = input.value.trim(), btn = document.getElementById('send-btn');
+        if (!msg) return;
+        addMessage(msg, 'user');
+        input.value = '';
+        btn.disabled = true;
+        var tid = addTyping();
+        try {
+          var r = await fetch(c.apiUrl || '/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
+          removeTyping(tid);
+          if (!r.ok) { var e = await r.json(); throw new Error(e.error || 'Ошибка'); }
+          var d = await r.json();
+          addMessage(d.response, 'assistant');
+        } catch (err) {
+          removeTyping(tid);
+          addMessage('Ошибка: ' + err.message, 'error');
+        }
+        btn.disabled = false;
+      };
+      function addMessage(text, role) {
+        var el = document.getElementById('chat-messages'), div = document.createElement('div');
+        div.className = 'ai-message ' + role;
+        div.textContent = text;
+        el.appendChild(div);
+        el.scrollTop = el.scrollHeight;
+      }
+      function addTyping() {
+        var el = document.getElementById('chat-messages'), div = document.createElement('div');
+        div.className = 'ai-typing';
+        div.innerHTML = '<span></span><span></span><span></span>';
+        div.id = 'typing-' + Date.now();
+        el.appendChild(div);
+        el.scrollTop = el.scrollHeight;
+        return div.id;
+      }
+      function removeTyping(id) { var el = document.getElementById(id); if (el) el.remove(); }
+    })();
+  </script>
 </body>
 </html>
